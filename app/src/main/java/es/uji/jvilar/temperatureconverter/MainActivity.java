@@ -12,12 +12,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean changing;
     private EditText celsius;
     private EditText fahrenheit;
+    private Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        presenter = new Presenter(this);
 
         celsius = findViewById(R.id.celsius);
         celsius.addTextChangedListener(new TextWatcher() {
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                onCelsiusChanged(s.toString());
+                presenter.onCelsiusChanged(s.toString());
             }
         });
 
@@ -52,34 +54,26 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                onFahrenheitChanged(s.toString());
+                presenter.onFahrenheitChanged(s.toString());
             }
         });
     }
 
-    public void onCelsiusChanged(String s) {
+    public void showFahrenheit(String s) {
         if (changing)
             return;
         changing = true;
-        if (!s.isEmpty()) {
-            double celsius = Double.parseDouble(s);
-            double fahrenheit = celsius / 100 * 180 + 32;
-            this.fahrenheit.setText(fahrenheit + "");
-        } else
-            this.fahrenheit.setText("");
+        this.fahrenheit.setText(s);
         changing = false;
     }
 
-    public void onFahrenheitChanged(String s) {
+    public void showCelsius(String s) {
         if (changing)
             return;
         changing = true;
-        if (!s.isEmpty()) {
-            double fahrenheit = Double.parseDouble(s);
-            double celsius = (fahrenheit - 32) / 180 * 100;
-            this.celsius.setText(celsius + "");
-        } else
-            this.celsius.setText("");
+        this.celsius.setText(s);
         changing = false;
     }
+
+
 }
